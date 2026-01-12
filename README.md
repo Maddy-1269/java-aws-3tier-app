@@ -40,31 +40,57 @@ Each tier runs in its **own Docker container** and communicates over a **Docker 
 ## Final Project Structure
 
 java-aws-3tier-app/
+
 │
+
 ├── backend/
+
 │ ├── Dockerfile
+
 │ ├── pom.xml
+
 │ ├── wait-for-mysql.sh
+
 │ └── src/main/
+
 │ ├── java/com/app/
+
 │ │ ├── HealthServlet.java
+
 │ │ ├── UserServlet.java
+
 │ │ └── EmployeeServlet.java
+
 │ └── webapp/WEB-INF/
+
 │ └── web.xml
+
 │
+
 ├── frontend/
+
 │ ├── Dockerfile
+
 │ ├── nginx.conf
+
 │ └── html/
+
 │ └── index.html
+
 │
+
 ├── db/
+
 │ └── schema.sql
+
 │
+
 ├── docker-compose.yml
+
 ├── .env.example
+
 ├── .gitignore
+
 └── README.md
 
 
@@ -281,4 +307,5 @@ SELECT * FROM employees;
 
 - **Real-World Debugging and Troubleshooting**  
   Hands-on resolution of dependency, containerization, networking, and runtime issues.
+
 
