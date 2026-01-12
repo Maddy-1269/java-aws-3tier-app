@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Employee Management</title>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<h1>Employee Management System</h1>
+
+<hr>
+
+<h2>Add Employee</h2>
+
+<form id="empForm">
+    Name: <input type="text" name="name" required><br><br>
+    Email: <input type="email" name="email" required><br><br>
+    Department: <input type="text" name="department" required><br><br>
+    <button type="submit">Add Employee</button>
+</form>
+
+<hr>
+
+<h2>Employee List</h2>
+
+<button onclick="getEmployees()">Get Employees</button>
+
+<br><br>
+
+<table border="1" cellpadding="8" cellspacing="0">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Department</th>
+        </tr>
+    </thead>
+    <tbody id="empTableBody">
+        <!-- Rows will be added dynamically -->
+    </tbody>
+</table>
+
+<script>
+document.getElementById("empForm").addEventListener("submit", async function(e) {
+    e.preventDefault();
+
+    const formData = new URLSearchParams(new FormData(this));
+
+    const response = await fetch("/api/employees", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+        },
+        body: formData.toString()
+    });
+
+    alert(await response.text());
+    this.reset();
+    getEmployees(); // refresh table after insert
+});
+
+async function getEmployees() {
+    const response = await fetch("/api/employees");
+    const data = await response.json();
+
+    const tableBody = document.getElementById("empTableBody");
+    tableBody.innerHTML = ""; // clear old data
+
+    data.forEach(emp => {
+        const row = document.createElement("tr");
+
+        row.innerHTML = `
+            <td>${emp.id}</td>
+            <td>${emp.name}</td>
+            <td>${emp.email}</td>
+            <td>${emp.department}</td>
+        `;
+
+        tableBody.appendChild(row);
+    });
+}
+</script>
+
+</body>
+</html>

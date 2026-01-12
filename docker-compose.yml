@@ -1,0 +1,54 @@
+version: "3.9"
+
+services:
+
+  mysql-db:
+    image: mysql:8.0
+    container_name: mysql-db
+    env_file:
+      - .env
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: ${DB_NAME}
+    volumes:
+      # Persistent MySQL data (THIS FIXES EVERYTHING)
+      - mysql_data:/var/lib/mysql
+      # Schema + user creation (runs ONLY first time)
+      - ./db/schema.sql:/docker-entrypoint-initdb.d/schema.sql
+    networks:
+      - app-network
+    ports:
+      - "3306:3306"
+
+  backend-app:
+    build:
+      context: ./backend
+    container_name: backend-app
+    env_file:
+      - .env
+    depends_on:
+      - mysql-db
+    networks:
+      - app-network
+    ports:
+      - "9090:8080"
+
+  frontend-app:
+    build:
+      context: ./frontend
+    container_name: frontend-app
+    depends_on:
+      - backend-app
+    networks:
+      - app-network
+    ports:
+      - "8081:80"
+
+networks:
+  app-network:
+    driver: bridge
+
+# Named volumes (VERY IMPORTANT)
+volumes:
+  mysql_data:
+
